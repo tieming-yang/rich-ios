@@ -49,13 +49,17 @@ struct SignInEmailView: View {
         VStack {
             TextField("Email...", text: $viewModel.email)
                 .padding()
-                .background(.secondary.opacity(0.3))
-                .cornerRadius(30)
+                .overlay {
+                    RoundedRectangle(cornerRadius: 30)
+                        .stroke(.primary)
+                }
 
             SecureField("Password", text: $viewModel.password)
                 .padding()
-                .background(.secondary.opacity(0.3))
-                .cornerRadius(30)
+                .overlay {
+                    RoundedRectangle(cornerRadius: 30)
+                        .stroke(.primary)
+                }
 
             Button {
                 Task {
