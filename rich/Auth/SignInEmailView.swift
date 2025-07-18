@@ -74,6 +74,7 @@ struct SignInEmailView: View {
                     do {
                         try await viewModel.signIn()
                         showSignInView = false
+
                         print("✅ Sign In Successfully")
                         return
                     } catch {

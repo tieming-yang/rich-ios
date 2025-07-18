@@ -13,6 +13,20 @@ final class SettingsViewModel {
     func signOut() throws {
         try AuthManager.shared.signOut()
     }
+
+    func resetPassword() async throws {
+        let authUser = try AuthManager.shared.getUser()
+
+        guard let email = authUser.email else {
+            throw NSError(
+                domain: "",
+                code: 0,
+                userInfo: [NSLocalizedDescriptionKey: "Please login first"]
+            )
+        }
+
+        try await AuthManager.shared.resetPassword(email: email)
+    }
 }
 
 struct SettingsView: View {
@@ -31,12 +45,9 @@ struct SettingsView: View {
                     }
                 }
             }
-            .font(.headline)
-            .foregroundStyle(.white)
-            .frame(maxWidth: .infinity)
-            .frame(height: 55)
-            .background(.primary.opacity(0.9))
-            .cornerRadius(30)
+
+            EmailSettingView()
+
         }
         .navigationBarTitle("Settings")
     }
@@ -45,5 +56,28 @@ struct SettingsView: View {
 #Preview {
     NavigationStack {
         SettingsView(showSignInView: .constant(false))
+    }
+}
+
+
+struct EmailSettingView: View {
+    @State private var viewModel = SettingsViewModel()
+    
+    var body: some View {
+        Section {
+            // TODO: Resent email sent alert
+            Button("Reset Password") {
+                Task {
+                    do {
+                        try await viewModel.resetPassword()
+                        print("Password reset email sent.")
+                    } catch {
+                        print("Reset Error in SettingsView \(error)")
+                    }
+                }
+            }
+        } header: {
+            Text("Email")
+        }
     }
 }
