@@ -94,25 +94,6 @@ struct AuthView: View {
             .background(.primary)
             .cornerRadius(30)
 
-            GoogleSignInButton(
-                viewModel: GoogleSignInButtonViewModel(
-                    scheme: .dark,
-                    style: .wide,
-                    state: .normal
-                )
-            ) {
-                Task {
-                    do {
-                        try await viewModel.signInWithGoogle()
-                        showSignInView = false
-                    } catch {
-                        print("Sign in with Google Error: \(error)")
-                    }
-                }
-            }
-            .frame(height: 50)
-            .cornerRadius(30)
-
             Spacer()
         }
         .padding()
