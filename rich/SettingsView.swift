@@ -10,6 +10,15 @@ import SwiftUI
 @MainActor
 @Observable
 final class SettingsViewModel {
+
+    var authProviders: [AuthProviderOptions] = []
+
+    func loadAuthProvders() {
+        if let providers = try? AuthManager.shared.getProvider() {
+            authProviders = providers
+        }
+    }
+
     func signOut() throws {
         try AuthManager.shared.signOut()
     }
@@ -45,9 +54,13 @@ struct SettingsView: View {
                     }
                 }
             }
+            if viewModel.authProviders.contains(.email) {
+                EmailSettingView()
+            }
 
-            EmailSettingView()
-
+        }
+        .onAppear {
+            viewModel.loadAuthProvders()
         }
         .navigationBarTitle("Settings")
     }
@@ -59,10 +72,9 @@ struct SettingsView: View {
     }
 }
 
-
 struct EmailSettingView: View {
     @State private var viewModel = SettingsViewModel()
-    
+
     var body: some View {
         Section {
             // TODO: Resent email sent alert
